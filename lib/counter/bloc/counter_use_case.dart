@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:clean_framework/clean_framework_defaults.dart';
 import 'package:flutter/material.dart';
 import 'package:framework_example/counter/models/counter_entity.dart';
