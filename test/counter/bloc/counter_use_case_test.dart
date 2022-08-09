@@ -31,7 +31,6 @@ void main() {
     setUp(() {
       dummyFunctions = MockDummyFunctions();
       mockRepository = MockRepository();
-      mockRepository.mockEntity = CounterEntity(counter: 5);
       useCase = CounterUseCase(
         dummyFunctions.viewModelCallBack,
         repository: mockRepository,
@@ -52,9 +51,9 @@ void main() {
       expect(useCase, isNotNull);
     });
 
-    test('sendViewModelRequest', () {
-      useCase.create();
-      expect(getSentModel().counter, '5');
+    test('sendViewModelRequest', () async {
+      await useCase.create();
+      expect(getSentModel().counter, '0');
     });
 
     test('buildViewModel', () {

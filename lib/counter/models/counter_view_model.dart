@@ -12,3 +12,7 @@ class CounterViewModel extends ViewModel {
         counter,
       ];
 }
+
+class CounterViewModelWithError extends CounterViewModel {
+  CounterViewModelWithError({required super.counter});
+}

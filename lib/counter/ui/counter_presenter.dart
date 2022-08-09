@@ -28,10 +28,16 @@ class CounterPresenter
   @override
   Widget buildLoadingScreen(BuildContext context) => Container(
         key: const Key('waitingForStream'),
+        color: Colors.white,
+        alignment: Alignment.center,
         child: const CircularProgressIndicator(),
       );
 
   @override
-  Widget buildErrorScreen(BuildContext context, Object? error) =>
-      Container(key: Key('noContentFromStream'));
+  Widget buildErrorScreen(BuildContext context, Object? error) => Container(
+        key: const Key('noContentFromStream'),
+        color: Colors.white,
+        alignment: Alignment.center,
+        child: const Text('Error'),
+      );
 }

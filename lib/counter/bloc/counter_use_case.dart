@@ -1,10 +1,11 @@
+import 'dart:math';
+
 import 'package:clean_framework/clean_framework_defaults.dart';
 import 'package:flutter/material.dart';
 import 'package:framework_example/counter/models/counter_entity.dart';
 import 'package:framework_example/counter/models/counter_view_model.dart';
 import 'package:clean_framework/clean_framework.dart';
 import 'package:framework_example/locator.dart';
-import 'package:framework_example/other/repository_extensions.dart';
 
 class CounterUseCase extends UseCase {
   late final Repository _repository;
@@ -16,21 +17,16 @@ class CounterUseCase extends UseCase {
   })  : _viewModelCallBack = viewModelCallBack,
         _repository = repository ?? repo();
 
-  void create() {
-    RepositoryScope? scope = _repository.containsScope<CounterEntity>();
-    if (scope == null) {
-      final newEntity = CounterEntity();
-      scope = _repository.create<CounterEntity>(
-        newEntity,
-        _notifySubscribers,
-        deleteIfExists: true,
-      );
-    } else {
-      scope.subscription = _notifySubscribers;
-    }
-
-    final entity = _repository.get<CounterEntity>(scope);
+  Future<void> create() async {
+    final entity = CounterEntity();
+    _repository.create<CounterEntity>(
+      entity,
+      _notifySubscribers,
+      deleteIfExists: true,
+    );
+    await Future.delayed(const Duration(milliseconds: 1000));
     _notifySubscribers(entity);
+    // _notifySubscribers(entity.merge(errors: const [EntityFailure()]));
   }
 
   void _notifySubscribers(entity) {
@@ -48,8 +44,14 @@ class CounterUseCase extends UseCase {
 
   @visibleForTesting
   CounterViewModel buildViewModel(CounterEntity entity) {
-    return CounterViewModel(
-      counter: '${entity.counter}',
-    );
+    if (entity.hasErrors()) {
+      return CounterViewModelWithError(
+        counter: '${entity.counter}',
+      );
+    } else {
+      return CounterViewModel(
+        counter: '${entity.counter}',
+      );
+    }
   }
 }

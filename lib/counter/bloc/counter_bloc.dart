@@ -17,12 +17,18 @@ class CounterBloc extends Bloc {
   }
 
   CounterBloc({CounterUseCase? counterUseCase}) {
-    _useCase = counterUseCase ??
-        CounterUseCase((viewModel) => counterViewModelPipe.send(viewModel));
+    _useCase = counterUseCase ?? CounterUseCase(viewModelCallback);
 
     counterViewModelPipe.whenListenedDo(() => _useCase.create());
-
     counterEventPipe.receive.listen(_counterEventHandler);
+  }
+
+  bool viewModelCallback(CounterViewModel viewModel) {
+    if (viewModel is CounterViewModelWithError) {
+      return counterViewModelPipe.throwError(Error());
+    } else {
+      return counterViewModelPipe.send(viewModel);
+    }
   }
 
   void _counterEventHandler(CounterEvent event) {
