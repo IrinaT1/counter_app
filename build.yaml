@@ -1,0 +1,11 @@
+targets:
+  $default:
+    builders:
+      generators:generate_model_builder:
+        enabled: false
+      huntington_core:generate_model_builder:
+        enabled: true
+        generate_for:
+          - lib/**/*_entity.dart
+          - lib/**/*_view_model.dart
+          - lib/**/*_viewmodel.dart
